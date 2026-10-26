@@ -1,0 +1,418 @@
+==================================================
+EXP 1: ACTIVITY LIFE CYCLE
+==================================================
+
+--- MainActivity.java ---
+package com.example.lifecycle;
+
+import android.os.Bundle;
+import android.util.Log;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+    String tag = "Activity Life Cycle";
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        Log.d(tag, "In the onCreate() event");
+    }
+
+    public void onStart() {
+        super.onStart();
+        Log.d(tag, "In the onStart() event");
+    }
+
+    public void onRestart() {
+        super.onRestart();
+        Log.d(tag, "In the onRestart() event");
+    }
+
+    public void onResume() {
+        super.onResume();
+        Log.d(tag, "In the onResume() event");
+    }
+
+    public void onPause() {
+        super.onPause();
+        Log.d(tag, "In the onPause() event");
+    }
+
+    public void onStop() {
+        super.onStop();
+        Log.d(tag, "In the onStop() event");
+    }
+
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(tag, "In the onDestroy() event");
+    }
+}
+
+--- activity_main.xml ---
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Check Logcat for Activity Lifecycle"
+        android:textSize="18sp" />
+</LinearLayout>
+
+
+==================================================
+EXP 3: SIMPLE SMS APPLICATION
+==================================================
+
+--- MainActivity.java ---
+package com.example.message;
+
+import android.Manifest;
+import android.app.Activity;
+import android.content.pm.PackageManager;
+import android.os.Bundle;
+import android.telephony.SmsManager;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+public class MainActivity extends Activity {
+    private static final int MY_PERMISSIONS_REQUEST_SEND_SMS = 0;
+    Button sendBtn;
+    EditText txtphoneNo;
+    EditText txtMessage;
+    String phoneNo;
+    String message;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        sendBtn = findViewById(R.id.btnSendSMS);
+        txtphoneNo = findViewById(R.id.editText);
+        txtMessage = findViewById(R.id.editText2);
+        sendBtn.setOnClickListener(view -> sendSMSMessage());
+    }
+
+    protected void sendSMSMessage() {
+        phoneNo = txtphoneNo.getText().toString();
+        message = txtMessage.getText().toString();
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+            if (!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.SEND_SMS)) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.SEND_SMS}, MY_PERMISSIONS_REQUEST_SEND_SMS);
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode == MY_PERMISSIONS_REQUEST_SEND_SMS) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                SmsManager smsManager = SmsManager.getDefault();
+                smsManager.sendTextMessage(phoneNo, null, message, null, null);
+                Toast.makeText(getApplicationContext(), "SMS sent.", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(getApplicationContext(), "SMS failed, please try again.", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+}
+
+--- activity_main.xml ---
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Phone No" />
+
+    <EditText
+        android:id="@+id/editText2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Message" />
+
+    <Button
+        android:id="@+id/btnSendSMS"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SEND SMS" />
+</LinearLayout>
+
+
+==================================================
+EXP 5: NAVIGATION THROUGH MULTIPLE PAGES
+==================================================
+
+--- Oneactivity.java ---
+import android.content.Intent;
+import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+
+public class Oneactivity extends AppCompatActivity {
+    TextView question1;
+    Button next_Activity_button;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_oneactivity);
+        next_Activity_button = (Button) findViewById(R.id.first_activity_button);
+        question1 = (TextView) findViewById(R.id.question1_id);
+        question1.setText("Q 1 - How to pass the data between activities in Android?\n\nAns- Intent");
+        next_Activity_button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(Oneactivity.this, SecondActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+}
+
+--- SecondActivity.java ---
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.content.Intent;
+import android.widget.TextView;
+
+public class SecondActivity extends AppCompatActivity {
+    TextView question2;
+    Button next_button, previous_button;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_second);
+        next_button = (Button) findViewById(R.id.second_activity_next_button);
+        previous_button = (Button) findViewById(R.id.second_activity_previous_button);
+        question2 = (TextView) findViewById(R.id.question2_id);
+        question2.setText("Q 2 - What is ADB in android?\n\nAns- Android Debug Bridge");
+        next_button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(SecondActivity.this, ThirdActivity.class);
+                startActivity(intent);
+            }
+        });
+        previous_button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(SecondActivity.this, Oneactivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+}
+
+--- ThirdActivity.java ---
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.content.Intent;
+import android.widget.TextView;
+
+public class ThirdActivity extends AppCompatActivity {
+    TextView question3;
+    Button previous_button;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_third);
+        previous_button = (Button) findViewById(R.id.third_activity_previous_button);
+        question3 = (TextView) findViewById(R.id.question3_id);
+        question3.setText("Q 3 - How to store heavy structured data in android?\n\nAns- SQlite database");
+        previous_button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(ThirdActivity.this, SecondActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+}
+
+--- activity_oneactivity.xml ---
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp">
+    <TextView
+        android:id="@+id/question1_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp" />
+    <Button
+        android:id="@+id/first_activity_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="NEXT" />
+</LinearLayout>
+
+
+==================================================
+EXP 7: SIMPLE INTENT
+==================================================
+
+--- MainActivity.java ---
+package com.example.intent;
+
+import androidx.appcompat.app.AppCompatActivity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+public class MainActivity extends AppCompatActivity {
+    EditText urname, urphoneno;
+    Button clk;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        urname = findViewById(R.id.name);
+        urphoneno = findViewById(R.id.phoneno);
+        clk = findViewById(R.id.button);
+    }
+
+    public void movepage(View v) {
+        String stname = urname.getText().toString().trim();
+        String stphoneno = urphoneno.getText().toString().trim();
+        if (stname.equals("usha") && stphoneno.equals("9941775863")) {
+            Intent in = new Intent(MainActivity.this, Main2Activity.class);
+            in.putExtra("name_key", stname);
+            in.putExtra("phone_key", stphoneno);
+            startActivity(in);
+        } else if (stname.equals("") || stphoneno.equals("")) {
+            Toast.makeText(getBaseContext(), "ENTER BOTH NAME AND PHONE NUMBER", Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(getBaseContext(), "WRONG NAME AND PHONE NUMBER ENTERED", Toast.LENGTH_LONG).show();
+        }
+    }
+}
+
+--- Main2Activity.java ---
+package com.example.intent;
+
+import androidx.appcompat.app.AppCompatActivity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.widget.EditText;
+
+class Main2Activity extends AppCompatActivity {
+    EditText receiver_msg;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main2);
+        receiver_msg = findViewById(R.id.received_value_id);
+        Intent intent = getIntent();
+        String str = intent.getStringExtra("message_key");
+        receiver_msg.setText(str);
+    }
+}
+
+--- activity_main.xml ---
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp">
+    <EditText
+        android:id="@+id/name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Username" />
+    <EditText
+        android:id="@+id/phoneno"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Phone No" />
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="NEXT"
+        android:onClick="movepage" />
+</LinearLayout>
+
+
+==================================================
+EXP 8: WEB BROWSER APPLICATION
+==================================================
+
+--- MainActivity.java ---
+package com.example.webbrowser;
+
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        EditText editText = findViewById(R.id.urlText);
+        Button btn = findViewById(R.id.btnNavigate);
+        btn.setOnClickListener(v -> {
+            String url = editText.getText().toString().trim();
+            if (!url.startsWith("http://") && !url.startsWith("https://")) {
+                url = "http://" + url;
+            }
+            try {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                startActivity(intent);
+            } catch (Exception e) {
+                Toast.makeText(MainActivity.this, "Invalid URL", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+}
+
+--- activity_main.xml ---
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp">
+    <EditText
+        android:id="@+id/urlText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="https://www.google.com" />
+    <Button
+        android:id="@+id/btnNavigate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="NAVIGATE" />
+</LinearLayout>
