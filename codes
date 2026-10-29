@@ -117,3 +117,50 @@ ul{
 border:2px solid black;
 list-style-type:square;
 }
+
+
+
+
+
+
+JAVA USING SERVLETS
+
+
+
+
+Myservlet.java
+
+package com.program4;
+import javax.servlet.*;
+import javax.servlet.http.*;
+import java.io.*;
+
+public class Myservlet extends HttpServlet {
+    public void doGet(HttpServletRequest req,HttpServletResponse res)
+    throws IOException,ServletException {
+        PrintWriter out=res.getWriter();
+        out.println("<body bgcolor='lightgreen'>");
+        out.println("<h1>Hello iam tomcat server...</h1>");
+        out.println("<h1>Invoking Servlet...</h1>");
+        out.println("<h1>U too can See: type as below in ur browser.. make LAN connect</h1>");
+        out.println("<h1 style='color:red;'>192.168.175.254:8080/program4/servlet1</h1>");
+        out.println("</body>");
+    }
+}
+
+
+web.xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee" version="4.0">
+<display-name>program4</display-name>
+<description>Welcome to Tomcat</description>
+<servlet>
+<servlet-name>servlet1</servlet-name>
+<servlet-class>com.program4.Myservlet</servlet-class>
+</servlet>
+<servlet-mapping>
+<servlet-name>servlet1</servlet-name>
+<url-pattern>/servlet1</url-pattern>
+</servlet-mapping>
+</web-app>
