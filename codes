@@ -77,3 +77,43 @@ th{background:green;color:white}
 </table>
 </body>
 </html>
+
+
+
+CSS 
+
+index.html
+
+<html>
+<head>
+<title>Types of CSS</title>
+<link rel="stylesheet" href="mystyle.css">
+<style>
+body{background-color:wheat}
+h3{color:green;font-style:italic}
+</style>
+</head>
+<body style="text-align:center">
+<h2 style="color:red">Welcome to Java Web Programming CSS using INLINE CSS</h2>
+<p style="color:blue;font-size:25px;font-style:italic">CSS styles webpages in three ways.</p>
+<h3>Internal CSS Style</h3>
+<ul>
+<li>Inline CSS: Styles one element using the style attribute.</li>
+<li>Internal CSS: Styles one page using the style tag.</li>
+<li>External CSS: Styles pages using a separate CSS file.</li>
+</ul>
+</body>
+</html>
+
+
+mystyle.css
+
+p{
+border:2px solid powderblue;
+padding:30px;
+margin:50px;
+}
+ul{
+border:2px solid black;
+list-style-type:square;
+}
