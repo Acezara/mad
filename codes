@@ -164,3 +164,58 @@ web.xml
 <url-pattern>/servlet1</url-pattern>
 </servlet-mapping>
 </web-app>
+
+
+
+
+ADD TWO NUM SING SERVLETS 
+
+
+
+
+index.html
+
+<html>
+<body style="background-color:powderblue">
+<h1 align="center">Addition Two Numbers using servlets</h1>
+<center>
+<form action="add">
+Enter first number: <input name="num1"><br>
+Enter second number: <input name="num2"><br>
+<input type="submit">
+</form>
+</center>
+</body>
+</html>
+
+
+AddServlet.java
+
+package com.myprog;
+import java.io.*;
+import javax.servlet.http.*;
+
+public class AddServlet extends HttpServlet {
+    public void service(HttpServletRequest req,HttpServletResponse res)
+    throws IOException {
+        int k=Integer.parseInt(req.getParameter("num1"))
+              +Integer.parseInt(req.getParameter("num2"));
+        System.out.println("result is "+k);
+        res.getWriter().println("Result is "+k);
+    }
+}
+
+
+web.xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee" version="4.0">
+<servlet>
+<servlet-name>abc</servlet-name>
+<servlet-class>com.myprog.AddServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+<servlet-name>abc</servlet-name>
+<url-pattern>/add</url-pattern>
+</servlet-mapping>
+</web-app>
